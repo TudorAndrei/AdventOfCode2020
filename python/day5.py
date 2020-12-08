@@ -3,50 +3,32 @@ from my_tools import *
 a = read_file("../inputs/day5.txt")
 
 
-def row(string, ticket=range(0, 128)):
-    #print(string, ticket)
+# Part1
+
+def binary_partition(string, top, bottom, ticket):
     if len(ticket) == 1:
         return ticket[0]
-
     half = int(len(ticket)/2)
 
-    if string[0] == 'F':
-        return row(string[1:], ticket[:half])
+    if string[0] == top:
+        return binary_partition(string[1:], top, bottom, ticket[:half])
 
-    if string[0] == 'B':
-        return row(string[1:], ticket[half:])
-
-
-def column(string, col=range(0, 8)):
-    x = [y for y in col]
-    #print("String: {} \nx is {}".format(string, x))
-    half = int(len(x) / 2)
-
-    if len(x) == 1:
-        return x
-
-    if string[0] == 'L':
-        return column(string[1:], col[:half])
-
-    if string[0] == 'R':
-        return column(string[1:], col[half:])
+    if string[0] == bottom:
+        return binary_partition(string[1:], top, bottom, ticket[half:])
 
 
 def ticket_id(string):
-    row_ = row(string[:7])
-    col = column(string[-3:])[0]
-    # print(string)
-    #print(row_, col)
+    row_ = binary_partition(string[:7], 'F', 'B', ticket=range(1, 128))
+    col = binary_partition(string[-3:], 'L', 'R', ticket=range(0, 8))
     return row_ * 8 + col
 
 
-tickets = []
-for ticket in a:
-    tickets.append(ticket_id(ticket))
+tickets = sorted([ticket_id(ticket) for ticket in a])
 
-seats = sorted(tickets)
-print("Max is : {}".format(seats[-1]))
-all_ticket = range(seats[0], seats[-1])
+print("Max is : {}".format(tickets[-1]))
+# Part2
+
+all_ticket = range(tickets[0], tickets[-1])
 
 for t in all_ticket[8:-8]:
     if t not in tickets:

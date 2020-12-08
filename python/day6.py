@@ -10,11 +10,10 @@ groups = [a[i:j] for i, j in pairs]
 
 count = 0
 
+# Part 1
 
 for ans in groups:
-    ans = "".join(ans)
-    ans = [x for x in ans]
-    ans = set(ans)
+    ans = set(x for x in "".join(ans))
     count += len(ans)
 
 print(count)
@@ -28,7 +27,7 @@ for ans in groups:
         ans = ans[1:]
 
     for letter in alphabet:
-        check = 0
+        check = [1 for a in ans if letter in a]
         for a in ans:
             if letter in a:
                 check += 1

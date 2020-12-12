@@ -10,21 +10,22 @@ test_ = mt.read_file("../inputs/test9.txt")
 
 def checker(list_, item):
     #print("Preable is {}".format(list_))
+    # print(list_)
     for i in list_:
         value = abs(item - i)
-        print("{} - {} = {}".format(item, i, abs(item-i)))
+        #print("{} - {} = {}".format(item, i, abs(item-i)))
         if value in list_ and value != item:
             return 0
     for i in list_:
         value = abs(item - i)
-        print("{} - {} = {}".format(item, i, value))
+        #print("{} - {} = {}".format(item, i, value))
     return value
 
 
-def part1(input_, preamble=5):
+def getInvalidNumber(input_, preamble=5):
     input_ = [int(x) for x in input_]
     for i in range(len(input_) - preamble):
-        print("INDEX:", i)
+        #print("INDEX:", i)
         i += preamble
         result = checker(input_[i-preamble:i], input_[i])
         # print(result)
@@ -37,34 +38,21 @@ def part1(input_, preamble=5):
 # print(part1(input_, 25))
 
 
-def checker2(list_, item):
-    print(list_)
-    invalid = checker(list_, item)
-    for index in range(len(list_)):
-        cont_list = list_[index:]
-        cont_list.append(item)
-        value = sum(cont_list)
-        if value == invalid:
-            continue
-        else:
-            return min(cont_list) + max(cont_list)
+def getInvalidSum(list_, invalid):
 
+    for index in range(1, len(list_)):
+        for start in range(index):
+            contiguous_set = list_[start:index]
+            if sum(contiguous_set) == invalid:
+                return sorted(contiguous_set)[0] + sorted(contiguous_set)[-1]
     return 0
 
 
 def part2(input_, preamble=5):
     input_ = [int(x) for x in input_]
-
-    for i in range(len(input_) - preamble):
-        print("INDEX:", i)
-        i += preamble
-        result = checker2(input_[i-preamble:i], input_[i])
-        print(result)
-        if result != 0:
-            return result
-        else:
-            continue
+    invalid = getInvalidNumber(input_, preamble)
+    return getInvalidSum(input_, invalid)
 
 
-print(part2(test_, preamble=5))
+print(part2(input_, preamble=5))
 print(part2(input_, preamble=25))
